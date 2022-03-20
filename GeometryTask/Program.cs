@@ -12,10 +12,11 @@ namespace GeometryTask
 
         private const int PlayerIdFirst = 1;
         private const int PlayerIdLast = 2;
+        private const int MinMoves = 20;
         private const int MinHeight = 20;
-        private const int MaxHeight = 60;//int.MaxValue
+        private const int MaxHeight = 60;//or int.MaxValue
         private const int MinLength = 30;
-        private const int MaxLength = 70;//int.MaxValue
+        private const int MaxLength = 70;//or int.MaxValue
         private const bool Chance = true;
 
         static void Main()
@@ -27,7 +28,7 @@ namespace GeometryTask
 
             Field field = new(CheckInput.Input(options[0], MinHeight, MaxHeight), CheckInput.Input(options[1], MinLength, MaxLength));
 
-            int moves = CheckInput.Input(options[2], field.Board.GetLength(0), int.MaxValue);
+            int moves = CheckInput.Input(options[2], MinMoves, int.MaxValue);
 
             Player player1 = new(moves, PlayerIdFirst);
             Player player2 = new(moves, PlayerIdLast);
@@ -40,7 +41,9 @@ namespace GeometryTask
                 foreach (Player player in players)
                 {
                     field.PrintField();
+
                     Console.WriteLine($"\nPlayer {player.Id} you have {player.Moves} moves left.");
+
                     MakeStep(field, dice, player, Chance);
                 }
                 if ((player1.Score + player2.Score) == field.Board.GetLength(0) * field.Board.GetLength(1))
