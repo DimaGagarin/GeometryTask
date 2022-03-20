@@ -18,14 +18,7 @@ namespace GeometryTask
 
             if (temp < min || temp > max)
             {
-                if (!error)
-                {
-                    temp = Input(line + $"(more then {min} and less then {max})", min, max, true);
-                }
-                else
-                {
-                    temp = Input(line, min, max, true);
-                }
+                temp = error ? Input(line, min, max, true) : Input(line + $"(more then {min} and less then {max})", min, max, true);
             }
 
             return temp;

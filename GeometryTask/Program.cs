@@ -5,9 +5,11 @@ namespace GeometryTask
 {
     public static class Program
     {
-        private const string text = "Enter height:\nEnter length:\nEnter moves:";
-        private const string textForOneMoreStep = "\nA rectangle with such dimensions cannot be placed on the field. Try your luck one more time";
-        private const string textForNoMoreSteps = "\nBad luck.You miss a turn. Press Enter to continue.";
+        private const string EnterText = "Geometry Game\nEnter the width and length of the field as well as the number of moves";
+        private const string InputText = "Enter height:\nEnter length:\nEnter moves:";
+        private const string TextForOneMoreStep = "\nA rectangle with such dimensions cannot be placed on the field. Try your luck one more time";
+        private const string TextForNoMoreSteps = "\nBad luck.You miss a turn. Press Enter to continue.";
+
         private const int PlayerIdFirst = 1;
         private const int PlayerIdLast = 2;
         private const int MinHeight = 20;
@@ -19,13 +21,13 @@ namespace GeometryTask
         static void Main()
         {
             ConsoleSetup.Setup();
+            ConsoleSetup.SetupMidle(EnterText);
 
-            string[] options = text.Split("\n");
-            bool Endgame = false;
+            string[] options = InputText.Split("\n");
 
             Field field = new(CheckInput.Input(options[0], MinHeight, MaxHeight), CheckInput.Input(options[1], MinLength, MaxLength));
 
-            int moves = CheckInput.Input(options[2], MinHeight, int.MaxValue);
+            int moves = CheckInput.Input(options[2], field.Board.GetLength(0), int.MaxValue);
 
             Player player1 = new(moves, PlayerIdFirst);
             Player player2 = new(moves, PlayerIdLast);
@@ -37,16 +39,14 @@ namespace GeometryTask
             {
                 foreach (Player player in players)
                 {
-                    if (!field.IsClearSpace())
-                    {
-                        Endgame = true;
-                        break;
-                    }
                     field.PrintField();
-                    Console.WriteLine($"\nPlayer {player.Id} you have {player.Moves} moves left");
+                    Console.WriteLine($"\nPlayer {player.Id} you have {player.Moves} moves left.");
                     MakeStep(field, dice, player, Chance);
                 }
-                if (Endgame) break;
+                if ((player1.Score + player2.Score) == field.Board.GetLength(0) * field.Board.GetLength(1))
+                {
+                    break;
+                }                   
             }
 
             field.PrintField();
@@ -66,12 +66,12 @@ namespace GeometryTask
             {
                 if (chance)
                 {
-                    Console.WriteLine(textForOneMoreStep);
+                    Console.WriteLine(TextForOneMoreStep);
                     MakeStep(field, dice, player, false);
                 }
                 else
                 {
-                    Console.WriteLine(textForNoMoreSteps);
+                    Console.WriteLine(TextForNoMoreSteps);
                     PressKey.Enter();
                     player.Moves--;
                 }
@@ -82,6 +82,7 @@ namespace GeometryTask
         {
 
             string endGameText;
+
             if (players[0].Score == players[1].Score)
             {
                 endGameText = new string($"End Game\nDraw. Both players have the same score {players[0].Score}\nPress Enter to close the game");

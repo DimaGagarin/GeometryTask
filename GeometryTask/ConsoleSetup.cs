@@ -16,9 +16,6 @@ namespace GeometryTask
         {
             ShowWindow(ThisConsole, MAXIMIZE);
             Console.ForegroundColor = ConsoleColor.Yellow;
-
-            string head = "Geometry Game\nEnter the width and length of the field as well as the number of moves";
-            SetupMidle(head);
         }
 
         public static void SetupMidle(string text, int top = 20)
